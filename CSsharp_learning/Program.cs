@@ -16,14 +16,20 @@ namespace CSsharp_learning
                 Console.WriteLine("Select a program you want to run:");
                 Console.WriteLine();    //insert [enter]
                 Console.WriteLine("1. Slicing a word or a sentence");
+                Console.WriteLine("2. Array Tutorial Example");
                 Console.WriteLine();    //insert [enter]
                 Console.WriteLine("Press 'q' to exit.");
                 Console.Write(">> ");
                 input = Console.ReadKey();
                     
-                if (input.Key == ConsoleKey.D1)
+                switch (input.Key)
                 {
-                    SlicingWord();                    
+                    case ConsoleKey.D1:
+                        SlicingWord();
+                        break;
+                    case ConsoleKey.D2:
+                        ArrayTutorial();
+                        break;
                 }
             } while (input.Key != ConsoleKey.Q);
 
@@ -31,12 +37,12 @@ namespace CSsharp_learning
 
         }
 
-        static void SlicingWord()
+        private static void SlicingWord()
         {
             Console.Clear();
             Console.WriteLine("Type any sentence or a word:");
-            var uInput = Console.ReadLine();
-            var typeOfUInput = "word";
+            string uInput = Console.ReadLine();
+            string typeOfUInput = "word";
             if (uInput.Contains(" "))
             {
                 typeOfUInput = "sentence";
@@ -47,7 +53,7 @@ namespace CSsharp_learning
             while (true)
             {
                 Console.WriteLine($"After how many letters do you want to split this {typeOfUInput}");
-                var count_input = Console.ReadLine();
+                string count_input = Console.ReadLine();
 
                 try // need to check if entered value can be a number
                 {
@@ -62,7 +68,7 @@ namespace CSsharp_learning
 
             }
 
-            String uInputWithoutSpaces = String.Empty;
+            string uInputWithoutSpaces = string.Empty;
             for (int ph = 0; ph < uInput.Length; ph++)
             {
                 if (uInput[ph] == ' ')
@@ -83,8 +89,27 @@ namespace CSsharp_learning
 
 
             EndOfApplication: 
-            System.Console.ReadKey();
+            Console.ReadKey();
             Console.Clear();
+        }
+
+        private static void ArrayTutorial()
+        {
+            Console.Clear();
+            Console.WriteLine("Welcome to array tutorial example!");
+            int[] array = {23, 2, 199, 4818};
+            string[] stringArray = new string[10]; //you need to specify empty arrays
+            stringArray[0] = "Penaze";
+            stringArray[1] = "Noaco";
+            
+            int i = 0;
+            while (stringArray[i] != null)
+            {
+                Console.WriteLine($"This is {i+1}. element from string  " + stringArray[i]);
+                i++;
+            }
+
+            Console.ReadKey();
         }
     }
 }
