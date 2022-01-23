@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace CSsharp_learning
@@ -31,56 +32,86 @@ namespace CSsharp_learning
                         ArrayTutorial();
                         break;
                     case ConsoleKey.D3:
+                        double result = 0;
+                        bool firstNum = false;
+                        string userChoice = "";
+                        ConsoleKeyInfo userFunctionChoice;
+                        List<string> exampleArray = new List<string>();
+                        
+                        
                         CalculatorStarts: ;
                         Console.Clear();
-                        Console.WriteLine("Choose a function (3 inputs, For example: 2 10 4, returns 6 because 10-4 is 6)");
-                        Console.WriteLine("1. Plus");
-                        Console.WriteLine("2. Minus");
-                        Console.WriteLine("3. Times");
-                        Console.WriteLine("4. Division");
-                        string userChoice = Console.ReadLine();
-
-                        string[] userChoiceWithoutSpace = userChoice.Split(' ');
-                        double calcNum1 = Convert.ToDouble(userChoiceWithoutSpace[1]);
-                        double calcNum2 = Convert.ToDouble(userChoiceWithoutSpace[2]);
                         
-                        // int result = 0;
-                        // switch (userChoiceWithoutSpace[0])
-                        // {
-                        //     case "1":
-                        //         result = Calculator(calcNum, "+");
-                        //         break;
-                        //     case "2":
-                        //         result = Calculator(calcNum, "-");
-                        //         break;
-                        //     case "3":
-                        //         result = Calculator(calcNum, "/");
-                        //         break;
-                        //     case "4":
-                        //         result = Calculator(calcNum, "*");
-                        //         break;
-                        //     default:
-                        //         result = 1;
-                        //         break;
-                        // }
-                        
-                        double result = userChoiceWithoutSpace[0] switch
+                        if (firstNum == false)
                         {
-                            "1" => Calculator(calcNum1,calcNum2, "+"),
-                            "2" => Calculator(calcNum1,calcNum2, "-"),
-                            "3" => Calculator(calcNum1,calcNum2, "*"),
-                            "4" => Calculator(calcNum1,calcNum2, "/"),
+                            Console.WriteLine("Type the first number");
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            Console.Write("Example: ");
+                            userChoice = Console.ReadLine();
+                            exampleArray.Add(userChoice);
+                            result = Convert.ToDouble(userChoice);
+                            firstNum = true;
+                            goto CalculatorStarts;
+                        }
+                        else
+                        {
+                            Console.WriteLine("1. +");
+                            Console.WriteLine("2. -");
+                            Console.WriteLine("3. *");
+                            Console.WriteLine("4. /");
+                            
+                            string example = "";
+                            foreach (string i in exampleArray)
+                                example += i;
+                            
+                            Console.WriteLine("Example: " + example + " = "+ result);    
+                            userFunctionChoice = Console.ReadKey();
+                            
+                            if (userFunctionChoice.Key == ConsoleKey.Q)
+                            {
+                                Environment.Exit(1);
+                            }
+                        }
+                        
+                        Console.Write("\b");
+                        switch (userFunctionChoice.Key)
+                        {
+                            case ConsoleKey.D1:
+                                Console.Write(result+"+");
+                                exampleArray.Add("+");
+                                break;
+                            case ConsoleKey.D2:
+                                Console.Write(result+"-");
+                                exampleArray.Add("-");
+                                break;
+                            case ConsoleKey.D3:
+                                Console.Write(result+"*");
+                                exampleArray.Add("*");
+                                break;
+                            case ConsoleKey.D4:
+                                Console.Write(result+"/");
+                                exampleArray.Add("/");
+                                break;
+                            default:
+                                Console.WriteLine("Invalid Input..");
+                                Thread.Sleep(2000);
+                                goto CalculatorStarts;
+                        }
+                        double userInputNumber = Convert.ToDouble(Console.ReadLine());
+                        exampleArray.Add(Convert.ToString(userInputNumber));
+
+                        result = userFunctionChoice.Key switch
+                        {
+                            ConsoleKey.D1 => Calculator(userInputNumber, result, "+"),
+                            ConsoleKey.D2 => Calculator(userInputNumber, result, "-"),
+                            ConsoleKey.D3 => Calculator(userInputNumber, result, "*"),
+                            ConsoleKey.D4 => Calculator(userInputNumber, result, "/"),
                             _ => 0
                         };
 
-                        Console.WriteLine("Result: " + result);
-                        Console.WriteLine("'A' - Calculator\t'Any' - Menu\t'Q' - Exit");
-                        input = Console.ReadKey();
-                        if (input.Key == ConsoleKey.A)
-                        {
-                            goto CalculatorStarts;
-                        }
-                        break;
+                        goto CalculatorStarts;
                 }
             } while (input.Key != ConsoleKey.Q);
 
@@ -163,14 +194,14 @@ namespace CSsharp_learning
             Console.ReadKey();
         }
 
-        private static double Calculator(double value1,double value2, string operatorType)
+        private static double Calculator(double value,double result, string operatorType)
         {
-            double result = operatorType switch
+            result = operatorType switch
             {
-                "+" => value1 + value2,
-                "-" => value1 - value2,
-                "/" => value1 / value2,
-                "*" => value1 * value2,
+                "+" => result + value,
+                "-" => result - value,
+                "/" => result / value,
+                "*" => result * value,
                 _ => 0
             };
 
