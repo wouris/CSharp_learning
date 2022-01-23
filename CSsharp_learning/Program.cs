@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace CSsharp_learning
 {
@@ -34,22 +35,22 @@ namespace CSsharp_learning
                     case ConsoleKey.D3:
                         double result = 0;
                         bool firstNum = false;
-                        string userChoice = "";
+                        
                         ConsoleKeyInfo userFunctionChoice;
                         List<string> exampleArray = new List<string>();
                         
                         
-                        CalculatorStarts: ;
+                        CalculatorStarts:
                         Console.Clear();
                         
-                        if (firstNum == false)
+                        if (!firstNum)  // when firstNum is false
                         {
                             Console.WriteLine("Type the first number");
                             Console.WriteLine();
                             Console.WriteLine();
                             Console.WriteLine();
                             Console.Write("Example: ");
-                            userChoice = Console.ReadLine();
+                            string userChoice = Console.ReadLine();
                             exampleArray.Add(userChoice);
                             result = Convert.ToDouble(userChoice);
                             firstNum = true;
@@ -57,10 +58,12 @@ namespace CSsharp_learning
                         }
                         else
                         {
+                            
                             Console.WriteLine("1. +");
                             Console.WriteLine("2. -");
                             Console.WriteLine("3. *");
                             Console.WriteLine("4. /");
+                            Console.WriteLine("9. Remove Last Action");
                             
                             string example = "";
                             foreach (string i in exampleArray)
@@ -94,12 +97,64 @@ namespace CSsharp_learning
                                 Console.Write(result+"/");
                                 exampleArray.Add("/");
                                 break;
+                            case ConsoleKey.D9:
+                                bool isOperator = false;
+                                string[] operatorsArray = {"+", "-", "*", "/"};
+                                int ph = exampleArray.Count;
+                                string findOperator = string.Empty;
+            
+                                List<string> operators = new List<string>(operatorsArray);
+                                while (!isOperator) //this while loop ends when it finds any operator
+                                {
+                                    if (ph == 0) goto CalculatorStarts;
+                                    // when you got only starting number and want to remove last action, it will automatically go to start
+                                    findOperator = exampleArray[ph - 1]; //ph - placeholder
+                                    foreach (string i in operators)
+                                    {
+                                        if (findOperator == i)  //if it is one of the operators, findOperator will be that operator and ends the loop
+                                        {
+                                            findOperator = i;
+                                            isOperator = true;
+                                        }
+                                    }
+                                    ph--;
+                                }
+
+                                double numToRemove = Convert.ToDouble(exampleArray[^1]); // last index in list
+                                
+                                result = findOperator switch
+                                {
+                                    "+" => result - numToRemove,
+                                    "-" => result + numToRemove,
+                                    "*" => result / numToRemove,
+                                    "/" => result * numToRemove,
+                                    _ => 0
+                                };
+
+                                exampleArray.RemoveAt(exampleArray.Count-1);
+                                exampleArray.RemoveAt(exampleArray.Count-1);
+                                goto CalculatorStarts;
+                            
                             default:
                                 Console.WriteLine("Invalid Input..");
                                 Thread.Sleep(2000);
                                 goto CalculatorStarts;
                         }
-                        double userInputNumber = Convert.ToDouble(Console.ReadLine());
+
+                        double userInputNumber;
+                        try
+                        {
+                            userInputNumber = Convert.ToDouble(Console.ReadLine());
+                        }
+                        catch(FormatException e)  // catches when user will type anything that cannot be converted to double variable
+                        {
+                            Console.WriteLine(e.Message);
+                            Thread.Sleep(2000);
+                            exampleArray.RemoveAt(exampleArray.Count-1);
+                            // need to remove last index in array because it causes operator duplication like 50+++++++5 = 55
+                            goto CalculatorStarts;
+                        }
+                        
                         exampleArray.Add(Convert.ToString(userInputNumber));
 
                         result = userFunctionChoice.Key switch
@@ -139,12 +194,12 @@ namespace CSsharp_learning
 
                 try // need to check if entered value can be a number
                 {
-                    count = int.Parse(countInput);
+                    count = Convert.ToInt32(countInput);
                     break;
                 }
-                catch (FormatException) // if entered value cannot be parsed to int, it throws FormatException
+                catch (FormatException e) // if entered value cannot be parsed to int, it throws FormatException
                 {
-                    Console.WriteLine("Invalid input...");
+                    Console.WriteLine(e.Message);
                     Thread.Sleep(1000);
                 }
 
