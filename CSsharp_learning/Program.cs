@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace CSsharp_learning
 {
@@ -16,9 +15,9 @@ namespace CSsharp_learning
                 Console.Clear();
                 Console.WriteLine("Select a program you want to run:");
                 Console.WriteLine();    //insert [enter]
-                Console.WriteLine("1. Slicing a word or a sentence");
-                Console.WriteLine("2. Array Tutorial Example");
-                Console.WriteLine("3. Calculator");
+                Console.WriteLine("1. Slicing a word or a sentence      4.RPG Game(Classes and Objects)");
+                Console.WriteLine("2. Array Tutorial Example            ");
+                Console.WriteLine("3. Calculator                        ");
                 Console.WriteLine();    //insert [enter]
                 Console.WriteLine("Press 'q' to exit.");
                 Console.Write(">> ");
@@ -165,9 +164,13 @@ namespace CSsharp_learning
                             ConsoleKey.D4 => Calculator(userInputNumber, result, "/"),
                             _ => 0
                         };
-
                         goto CalculatorStarts;
+                        
+                    case ConsoleKey.D4:
+                        ClassAndObject();
+                        break;
                 }
+                
             } while (input.Key != ConsoleKey.Q);
 
             Console.Write("\nGoodbye!");
@@ -261,6 +264,97 @@ namespace CSsharp_learning
             };
 
             return result;
+        }
+
+        private static void ClassAndObject()
+        {
+            Console.Clear();
+
+            PlayerInfo P1 = new PlayerInfo();
+
+            Console.Write("Welcome to Rocket Propelled Grenade RPG - by wouris" +
+                              "\nYour name: ");
+            P1.PlayerName = Console.ReadLine();
+            
+            Console.Clear();
+            Console.WriteLine($"Welcome {P1.PlayerName}, to Rocket Propelled Grenade RPG! - by wouris");
+            Console.WriteLine("Choose a class:");
+            Console.WriteLine("1. Knight        2.Mage      3.Assassin" +
+                              "\n   DMG: 24       DMG: 35       DMG: 13" +
+                              "\n   HP: 120       HP: 65        HP: 80");
+            ConsoleKeyInfo userClass = Console.ReadKey();
+            switch (userClass.Key)
+            {
+                case ConsoleKey.D1:
+                    P1.PlayerClass = "Knight";
+                    P1.PlayerHP = 120;
+                    P1.PlayerDMG = 24;
+                    break;
+                case ConsoleKey.D2:
+                    P1.PlayerClass = "Mage";
+                    P1.PlayerHP = 65;
+                    P1.PlayerDMG = 35;
+                    break;
+                case ConsoleKey.D3:
+                    P1.PlayerClass = "Assassin";
+                    P1.PlayerHP = 80;
+                    P1.PlayerDMG = 13;
+                    break;
+                    
+            }
+            
+            int damageTaken = 0;
+            while (P1.PlayerHP >= 1) // game loop until player dies
+            {
+                Console.Clear();
+                Console.WriteLine(P1.PlayerName + 
+                                  " | Class: " + P1.PlayerClass + 
+                                  " | HP: " + (P1.PlayerHP)+
+                                  " | Damage: " + P1.PlayerDMG);
+            
+
+                Console.WriteLine("\nWhat do you want to choose");
+                Console.WriteLine("1. Self Damage (-20 HP)");
+                Console.WriteLine("2. Change class");
+
+                ConsoleKeyInfo userChange = Console.ReadKey();
+                switch (userChange.Key)
+                {
+                    case ConsoleKey.D1:
+                        damageTaken += 20;
+                        P1.PlayerHP -= 20;
+                        break;
+                    case ConsoleKey.D2:
+                        ConsoleKeyInfo userClassChange;
+                        Console.Clear();
+                        Console.WriteLine("Choose a class: \n1.Knight\n2.Mage\n3.Assassin");
+                        userClassChange = Console.ReadKey();
+                        switch (userClassChange.Key)
+                        {
+                            case ConsoleKey.D1:
+                                P1.PlayerClass = "Knight";
+                                if (P1.PlayerHP <= 120)
+                                    P1.PlayerHP = Convert.ToInt32(120 * (double)P1.PlayerHP / 120);
+                                P1.PlayerDMG = 24;
+                                break;
+                            case ConsoleKey.D2:
+                                P1.PlayerClass = "Mage";
+                                P1.PlayerHP = Convert.ToInt32(65 * (double)P1.PlayerHP / 65);
+                                P1.PlayerDMG = 35;
+                                break;
+                            case ConsoleKey.D3:
+                                P1.PlayerClass = "Assassin";
+                                P1.PlayerHP = Convert.ToInt32(80 * (double)P1.PlayerHP / 80);
+                                P1.PlayerDMG = 13;
+                                break;
+                        }
+                        break;
+                }
+            }
+            Console.Clear();
+            Console.WriteLine("You Died!" +
+                              "\nYour score: 0");
+            Console.ReadKey();
         }
     }
 }
